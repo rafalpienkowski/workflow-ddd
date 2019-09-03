@@ -10,6 +10,8 @@
 *.cache
 *.suo
 *.vs
+.idea
+*.DotSettings.user
 # Include dlls if they're in the NuGet packages directory
 !/packages/*/lib/*.dll
 !/packages/*/lib/*/*.dll
