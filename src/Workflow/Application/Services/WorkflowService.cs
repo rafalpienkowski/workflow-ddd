@@ -5,9 +5,9 @@ namespace Workflow.Application.Services
 {
     public class WorkflowService
     {
-        private readonly ConfigurationRepository _repository;
+        private readonly IConfigurationRepository _repository;
 
-        public WorkflowService(ConfigurationRepository repository)
+        public WorkflowService(IConfigurationRepository repository)
         {
             _repository = repository;
         }

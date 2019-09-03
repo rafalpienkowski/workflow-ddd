@@ -1,14 +1,12 @@
 using System;
 using FluentAssertions;
 using Workflow.Application.Services;
-using Workflow.Domain.Configuration;
 using Xunit;
 
 namespace Workflow.Tests
 {
     public class WorkflowServiceTests
     {
-        
         [Fact]
         public void SunnyDayFlowTest()
         {
