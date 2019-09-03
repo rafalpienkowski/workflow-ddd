@@ -1,9 +1,9 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4BB0BB35-B248-4D47-B5F0-A9C54F7A5568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow", "Workflow\Workflow.csproj", "{A5A050B5-AA6E-4A56-BFB8-65AE4C665A1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow", "src\Workflow\Workflow.csproj", "{A5A050B5-AA6E-4A56-BFB8-65AE4C665A1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow.Tests", "Workflow.Tests\Workflow.Tests.csproj", "{FB287994-BC05-4A26-830E-E8A363AB9133}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow.Tests", "tests\Workflow.Tests\Workflow.Tests.csproj", "{FB287994-BC05-4A26-830E-E8A363AB9133}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
