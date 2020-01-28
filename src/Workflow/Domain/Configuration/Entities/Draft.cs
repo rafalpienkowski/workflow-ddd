@@ -1,39 +1,40 @@
 using System;
 using System.Runtime.CompilerServices;
+using Workflow.Domain.Configuration.ValueObjects;
 
 [assembly: InternalsVisibleTo("Workflow.Tests")]
-namespace Workflow.Domain.Configuration
+namespace Workflow.Domain.Configuration.Entities
 {
     public class Draft
     {
         /// <summary>
         /// Id
         /// </summary>
-        internal int Id { get; }
+        internal DraftId Id { get; }
         
         /// <summary>
         /// Data
         /// </summary>
-        internal string Data { get; }
+        internal Data Data { get; }
 
         /// <summary>
         /// Who create draft
         /// </summary>
-        internal string Author { get; }
+        internal Author Author { get; }
 
         /// <summary>
         /// When draft was created
         /// </summary>
-        internal DateTime CreationDate { get; }
+        internal Date CreationDate { get; }
 
-        internal Draft(string data, string author)
+        internal Draft(Data data, Author author)
         {
             Data = data;
             Author = author;
-            CreationDate = DateTime.UtcNow;
+            CreationDate = Date.FromDateTime(DateTime.UtcNow);
         }
 
-        internal Draft(int id, string data, string author, DateTime creationDate)
+        internal Draft(DraftId id, Data data, Author author, Date creationDate)
         {
             Id = id;
             Data = data;
@@ -44,13 +45,13 @@ namespace Workflow.Domain.Configuration
         public Planned Schedule(string author, DateTime whenGoLive)
         {
             //When go live validation
-            return new Planned(Id, Data, author, whenGoLive);
+            return new Planned(Id.AsInt(), Data.ToString(), author, whenGoLive);
         }
 
         public Live GoLive(string author)
         {
             //Validation
-            return new Live(Id, Data, author);
+            return new Live(Id.AsInt(), Data.ToString(), author);
         }
     }
 }

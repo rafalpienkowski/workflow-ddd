@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Workflow.Domain.Configuration.Entities;
+using Workflow.Domain.Configuration.ValueObjects;
 
 namespace Workflow.Domain.Configuration
 {
     public interface IConfigurationRepository
     {
-        int Save(Draft draft);
-        Draft GetDraft(int id);
+        void Save(Draft draft);
+        Draft GetDraft(DraftId id);
         bool DraftExists(int id);
         int Save(Planned planned);
         Planned GetPlanned(int id);

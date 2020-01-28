@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Workflow.Domain.Configuration;
+using Workflow.Domain.Configuration.Entities;
+using Workflow.Domain.Configuration.ValueObjects;
 
 namespace Workflow.Tests
 {
@@ -8,28 +11,28 @@ namespace Workflow.Tests
     {
         private readonly List<SampleDataTable> _data = new List<SampleDataTable>();
 
-        public int Save(Draft draft)
+        public void Save(Draft draft)
         {
-            var id = _data.Count + 1;
             var dataRow = new SampleDataTable
             {
-                Id = id,
+                Id = draft.Id.AsInt(),
                 Status = ConfigStatus.Draft,
-                Data = draft.Data,
-                DraftCreation = draft.CreationDate,
-                DraftAuthor = draft.Author
+                Data = draft.Data.ToString(),
+                DraftCreation = draft.CreationDate.AsDateTime(),
+                DraftAuthor = draft.Author.ToString()
             };
             _data.Add(dataRow);
-
-            return dataRow.Id;
         }
 
-        public Draft GetDraft(int id)
+        public Draft GetDraft(DraftId id)
         {
-            var dataRow = _data.FirstOrDefault(d => d.Id == id && d.Status == ConfigStatus.Draft);
-            return dataRow == null
-                ? null
-                : new Draft(dataRow.Id, dataRow.Data, dataRow.DraftAuthor, dataRow.DraftCreation);
+            var dataRow = _data.FirstOrDefault(d => d.Id == id.AsInt() && d.Status == ConfigStatus.Draft);
+            if(dataRow == null)
+            {
+                return null;
+            }
+
+            return DraftFactory.Create(Guid.NewGuid(), dataRow.Data, dataRow.DraftAuthor, dataRow.DraftCreation);
         }
 
         public int Save(Planned planned)

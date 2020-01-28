@@ -1,5 +1,7 @@
 using System;
 using Workflow.Domain.Configuration;
+using Workflow.Domain.Configuration.Entities;
+using Workflow.Domain.Configuration.ValueObjects;
 
 namespace Workflow.Application.Services
 {
@@ -12,16 +14,18 @@ namespace Workflow.Application.Services
             _repository = repository;
         }
 
-        public int CreateDraft(string data, string author)
+        public Draft CreateDraft(string data, string author)
         {
-            var factory = new DraftFactory();
-            var draft = factory.Create(data, author);
-            return _repository.Save(draft);
+            var draft = DraftFactory.Create(data, author);
+            _repository.Save(draft);
+
+            return draft;
         }
 
         public int Schedule(int id, string author, DateTime whenGoLive)
         {
-            var draft = _repository.GetDraft(id);
+            var draftId = DraftId.FromGuid(Guid.NewGuid());
+            var draft = _repository.GetDraft(draftId);
             var planned = draft.Schedule(author, whenGoLive);
             return _repository.Save(planned);
         }
@@ -29,9 +33,10 @@ namespace Workflow.Application.Services
         public int GoLive(int id, string author)
         {
             Live live = null;
+            var draftId = DraftId.FromGuid(Guid.NewGuid());
             if (_repository.DraftExists(id))
             {
-                var draft = _repository.GetDraft(id);
+                var draft = _repository.GetDraft(draftId);
                 live = draft.GoLive(author);
             }
             
