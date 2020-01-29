@@ -1,43 +1,45 @@
 using System;
+using Workflow.Domain.Configuration.ValueObjects;
 
-namespace Workflow.Domain.Configuration
+namespace Workflow.Domain.Configuration.Entities
 {
+
     public class Planned
     {
         /// <summary>
         /// Id
         /// </summary>
-        internal int Id { get; }
+        internal PlannedId Id { get; }
         
         /// <summary>
         /// Data
         /// </summary>
-        internal string Data { get; }
+        internal Data Data { get; }
         /// <summary>
         /// Who mark as planned
         /// </summary>
-        internal string Author { get; }
+        internal Author Author { get; }
 
         /// <summary>
         /// When config was planned
         /// </summary>
-        internal DateTime CreationDate { get; }
+        internal Date CreationDate { get; }
 
         /// <summary>
         /// When data go live
         /// </summary>
-        internal DateTime WhenGoLive { get; }
+        internal Date WhenGoLive { get; }
 
-        internal Planned(int id, string data, string author, DateTime goLive)
+        internal Planned(PlannedId id, Data data, Author author, Date goLive)
         {
             Id = id;
             Data = data;
             Author = author;
             WhenGoLive = goLive;
-            CreationDate = DateTime.UtcNow;
+            CreationDate = Date.Now();
         }
 
-        internal Planned(int id, string data, string author, DateTime creationDate, DateTime whenGoLive)
+        internal Planned(PlannedId id, Data data, Author author, Date creationDate, Date whenGoLive)
         {
             Id = id;
             Data = data;
@@ -46,9 +48,10 @@ namespace Workflow.Domain.Configuration
             WhenGoLive = whenGoLive;
         }
 
-        internal Live GoLive(string author)
+        internal Live GoLive(Author author)
         {
-            return new Live(Id, Data, author);
+            var liveId = LiveId.FromPlannedId(Id);
+            return new Live(liveId, Data, author);
         }
     }
 }

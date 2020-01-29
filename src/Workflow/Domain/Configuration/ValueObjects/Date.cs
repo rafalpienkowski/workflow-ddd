@@ -24,6 +24,12 @@ namespace Workflow.Domain.Configuration.ValueObjects
             return new Date(dateTime.Year, dateTime.Month, dateTime.Day);
         }
 
+        public static Date Now()
+        {
+            var now = DateTime.UtcNow;
+            return FromDateTime(now);
+        }
+
         public DateTime AsDateTime() => new DateTime(_year, _month, _day);
     }
 }

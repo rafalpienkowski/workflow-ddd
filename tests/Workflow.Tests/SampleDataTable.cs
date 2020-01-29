@@ -4,7 +4,7 @@ namespace Workflow.Tests
 {
     internal class SampleDataTable
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public ConfigStatus Status { get; set; }
         public string Data { get; set; }
         public string DraftAuthor { get; set; }

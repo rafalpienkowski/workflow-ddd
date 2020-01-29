@@ -10,7 +10,7 @@ namespace Workflow.Tests
         [Fact]
         public void SunnyDayFlowTest()
         {
-            var repository = new ConfigurationRepository();
+            var repository = new ConfigurationInMemoryRepository();
             var sut = new WorkflowService(repository);
             const string someData = "Some data";
 

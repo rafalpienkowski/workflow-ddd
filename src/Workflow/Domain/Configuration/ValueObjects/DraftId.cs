@@ -14,7 +14,7 @@ namespace Workflow.Domain.Configuration.ValueObjects
             _id = id;
         }
 
-        public int AsInt() => 0;
+        public Guid AsGuid() => _id;
 
         public static DraftId FromGuid(Guid id) => new DraftId(id);
 

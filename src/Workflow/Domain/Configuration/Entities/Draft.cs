@@ -42,16 +42,17 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = creationDate;
         }
 
-        public Planned Schedule(string author, DateTime whenGoLive)
+        public Planned Schedule(Author author, Date whenGoLive)
         {
             //When go live validation
-            return new Planned(Id.AsInt(), Data.ToString(), author, whenGoLive);
+            var plannedId = PlannedId.FromDraftId(Id);
+            return new Planned(plannedId, Data, author, whenGoLive);
         }
 
-        public Live GoLive(string author)
+        public Live GoLive(Author author)
         {
-            //Validation
-            return new Live(Id.AsInt(), Data.ToString(), author);
+            var liveId = LiveId.FromDraftId(Id);
+            return new Live(liveId, Data, author);
         }
     }
 }

@@ -4,7 +4,7 @@ using Workflow.Domain.Configuration.Entities;
 using Workflow.Domain.Configuration.ValueObjects;
 
 [assembly: InternalsVisibleTo("Workflow.Tests")]
-namespace Workflow.Domain.Configuration
+namespace Workflow.Domain.Configuration.Factories
 {
     /// <summary>
     /// Starting point. 

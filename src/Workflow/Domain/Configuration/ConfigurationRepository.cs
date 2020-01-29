@@ -7,13 +7,13 @@ namespace Workflow.Domain.Configuration
     {
         void Save(Draft draft);
         Draft GetDraft(DraftId id);
-        bool DraftExists(int id);
-        int Save(Planned planned);
-        Planned GetPlanned(int id);
-        bool PlannedExists(int id);
-        int Save(Live live);
-        Live GetLive(int id);
-        int Save(Archived archived);
-        Archived GetArchived(int id);
+        bool DraftExists(DraftId id);
+        void Save(Planned planned);
+        Planned GetPlanned(PlannedId id);
+        bool PlannedExists(PlannedId id);
+        void Save(Live live);
+        Live GetLive(LiveId id);
+        void Save(Archive archived);
+        Archive GetArchived(ArchiveId id);
     }
 }

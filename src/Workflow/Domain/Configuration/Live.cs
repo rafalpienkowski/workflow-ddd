@@ -1,38 +1,39 @@
-using System;
+using Workflow.Domain.Configuration.ValueObjects;
 
 namespace Workflow.Domain.Configuration
 {
+
     public class Live
     {
         /// <summary>
         /// Id
         /// </summary>
-        internal int Id { get; }
+        internal LiveId Id { get; }
         
         /// <summary>
         /// Data
         /// </summary>
-        internal string Data { get; }
+        internal Data Data { get; }
 
         /// <summary>
         /// Who mark as planned
         /// </summary>
-        internal string Author { get; }
+        internal Author Author { get; }
 
         /// <summary>
         /// When config was planned
         /// </summary>
-        internal DateTime CreationDate { get; }
+        internal Date CreationDate { get; }
 
-        internal Live(int id, string data, string author)
+        internal Live(LiveId id, Data data, Author author)
         {
             Id = id;
             Data = data;
             Author = author;
-            CreationDate = DateTime.UtcNow;
+            CreationDate = Date.Now();
         }
 
-        internal Live(int id, string data, string author, DateTime creationDate)
+        internal Live(LiveId id, Data data, Author author, Date creationDate)
         {
             Id = id;
             Data = data;
@@ -40,9 +41,10 @@ namespace Workflow.Domain.Configuration
             CreationDate = creationDate;
         }
 
-        public Archived Archive(string author)
+        public Archive Archive(Author author)
         {
-            return new Archived(Id, Data, author);
+            var archivedId = ArchiveId.FromLiveId(Id);
+            return new Archive(archivedId, Data, author);
         }
     }
 }
