@@ -12,14 +12,17 @@ namespace Workflow.Domain.Configuration.ValueObjects
         private readonly int _month;
         private readonly int _day;
 
-        private Date(DateTime date)
+        private Date(int year, int month, int day)
         {
-            _year = date.Year;
-            _month = date.Month;
-            _day = date.Day;
+            _year = year;
+            _month = month;
+            _day = day;
         }
 
-        public static Date FromDateTime(DateTime dateTime) => new Date(dateTime);
+        public static Date FromDateTime(DateTime dateTime)
+        {
+            return new Date(dateTime.Year, dateTime.Month, dateTime.Day);
+        }
 
         public DateTime AsDateTime() => new DateTime(_year, _month, _day);
     }

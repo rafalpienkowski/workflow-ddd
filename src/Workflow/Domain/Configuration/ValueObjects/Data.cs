@@ -10,11 +10,14 @@ namespace Workflow.Domain.Configuration.ValueObjects
 
         private Data(string data)
         {
-            //TODO validation
             _data = data;
         }
 
-        public static Data FromString(string data) => new Data(data);
+        public static Data FromString(string data)
+        {
+            //TODO validation
+            return new Data(data);
+        }
 
         public string AsString() => _data;
     }
