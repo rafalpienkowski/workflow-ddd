@@ -23,9 +23,9 @@ namespace Workflow.Application.Services
             return draft;
         }
 
-        public void Schedule(int id, string author, DateTime whenGoLive)
+        public void Schedule(Guid id, string author, DateTime whenGoLive)
         {
-            var draftId = DraftId.FromGuid(Guid.NewGuid());
+            var draftId = DraftId.FromGuid(id);
             var draft = _repository.GetDraft(draftId);
             var authorValue = Author.FromString(author);
             var whenGoLiveValue = Date.FromDateTime(whenGoLive);

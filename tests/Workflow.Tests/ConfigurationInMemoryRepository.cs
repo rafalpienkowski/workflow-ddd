@@ -18,9 +18,9 @@ namespace Workflow.Tests
             {
                 Id = draft.Id.AsGuid(),
                 Status = ConfigStatus.Draft,
-                Data = draft.Data.ToString(),
+                Data = draft.Data.AsString(),
                 DraftCreation = draft.CreationDate.AsDateTime(),
-                DraftAuthor = draft.Author.ToString()
+                DraftAuthor = draft.Author.AsString()
             };
             _data.Add(dataRow);
         }
@@ -33,7 +33,7 @@ namespace Workflow.Tests
                 return null;
             }
 
-            return DraftFactory.Create(Guid.NewGuid(), dataRow.Data, dataRow.DraftAuthor, dataRow.DraftCreation);
+            return DraftFactory.Create(dataRow.Id, dataRow.Data, dataRow.DraftAuthor, dataRow.DraftCreation);
         }
 
         public void Save(Planned planned)
@@ -54,7 +54,7 @@ namespace Workflow.Tests
                 return null;
             }
 
-            return PlannedFactory.Create(Guid.NewGuid(), dataRow.Data, dataRow.PlannedAuthor, dataRow.PlannedCreation, dataRow.WhenGoLive);
+            return PlannedFactory.Create(dataRow.Id, dataRow.Data, dataRow.PlannedAuthor, dataRow.PlannedCreation, dataRow.WhenGoLive);
         }
 
         public void Save(Live live)
@@ -74,7 +74,7 @@ namespace Workflow.Tests
                 return null;
             }
 
-            return LiveFactory.Create(Guid.NewGuid(), dataRow.Data, dataRow.LiveAuthor, dataRow.LiveCreation);
+            return LiveFactory.Create(dataRow.Id, dataRow.Data, dataRow.LiveAuthor, dataRow.LiveCreation);
         }
 
         public void Save(Archive archived)
@@ -93,7 +93,7 @@ namespace Workflow.Tests
             {
                 return null;
             }
-            return ArchiveFactory.Create(Guid.NewGuid(), dataRow.Data, dataRow.ArchivedAuthor, dataRow.ArchiveCreation);
+            return ArchiveFactory.Create(dataRow.Id, dataRow.Data, dataRow.ArchivedAuthor, dataRow.ArchiveCreation);
         }
 
         public bool DraftExists(DraftId id)

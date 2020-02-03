@@ -27,8 +27,9 @@ namespace Workflow.Domain.Configuration.Entities
         /// </summary>
         internal Date CreationDate { get; }
 
-        internal Draft(Data data, Author author)
+        internal Draft(DraftId id, Data data, Author author)
         {
+            Id = id;
             Data = data;
             Author = author;
             CreationDate = Date.FromDateTime(DateTime.UtcNow);

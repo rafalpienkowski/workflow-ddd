@@ -17,9 +17,10 @@ namespace Workflow.Domain.Configuration.Factories
         /// </summary>
         public static Draft Create(string data, string author)
         {
+            var draftId = DraftId.New();
             var draftData = Data.FromString(data);
             var draftAuthor = Author.FromString(author);
-            return new Draft(draftData, draftAuthor);
+            return new Draft(draftId, draftData, draftAuthor);
         }
 
         /// <summary>
