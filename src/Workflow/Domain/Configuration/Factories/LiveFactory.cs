@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using Workflow.Domain.Configuration.Entities;
 using Workflow.Domain.Configuration.ValueObjects;
 
 [assembly: InternalsVisibleTo("Workflow.Tests")]

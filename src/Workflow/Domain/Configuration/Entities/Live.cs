@@ -1,14 +1,14 @@
 using Workflow.Domain.Configuration.ValueObjects;
 
-namespace Workflow.Domain.Configuration
+namespace Workflow.Domain.Configuration.Entities
 {
 
-    public class Archive
+    public class Live
     {
         /// <summary>
         /// Id
         /// </summary>
-        internal ArchiveId Id { get; }
+        internal LiveId Id { get; }
         
         /// <summary>
         /// Data
@@ -25,7 +25,7 @@ namespace Workflow.Domain.Configuration
         /// </summary>
         internal Date CreationDate { get; }
 
-        internal Archive(ArchiveId id,Data data, Author author)
+        internal Live(LiveId id, Data data, Author author)
         {
             Id = id;
             Data = data;
@@ -33,12 +33,18 @@ namespace Workflow.Domain.Configuration
             CreationDate = Date.Now();
         }
 
-        internal Archive(ArchiveId id, Data data, Author author, Date creationDate)
+        internal Live(LiveId id, Data data, Author author, Date creationDate)
         {
             Id = id;
             Data = data;
             Author = author;
             CreationDate = creationDate;
+        }
+
+        public Archive Archive(Author author)
+        {
+            var archivedId = ArchiveId.FromLiveId(Id);
+            return new Archive(archivedId, Data, author);
         }
     }
 }
