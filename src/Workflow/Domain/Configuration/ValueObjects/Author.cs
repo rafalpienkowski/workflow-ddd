@@ -1,3 +1,4 @@
+using Workflow.Domain.Framework;
 
 namespace Workflow.Domain.Configuration.ValueObjects
 {
@@ -13,7 +14,18 @@ namespace Workflow.Domain.Configuration.ValueObjects
             _author = author;
         }
 
-        public static Author FromString(string author) => new Author(author);
+        public static Author FromString(string author)
+        {
+            if (author.Length > 3)
+            {
+                throw new BusinessException("Author's name is too long");
+            }
+            if (!author.StartsWith("T"))
+            {
+                throw new BusinessException("Only authors with names starting with T are allowed");
+            }
+            return new Author(author);
+        } 
 
         public string AsString() => _author;
     }

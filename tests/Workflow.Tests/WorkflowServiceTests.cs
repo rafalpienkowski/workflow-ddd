@@ -16,7 +16,7 @@ namespace Workflow.Tests
         private const string draftAuthor = "Raf";
         private DateTime goLive = DateTime.UtcNow.AddDays(12);
         private const string plannedAuthor = "Tom";
-        private const string liveAuthor = "Alice";
+        private const string liveAuthor = "Ali";
         private const string archiveAuthor = "Bob";
 
         [Fact]

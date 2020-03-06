@@ -1,3 +1,4 @@
+using Workflow.Domain.Framework;
 
 namespace Workflow.Domain.Configuration.ValueObjects
 {
@@ -15,7 +16,11 @@ namespace Workflow.Domain.Configuration.ValueObjects
 
         public static Data FromString(string data)
         {
-            //TODO validation
+            if (data.Length > 250)
+            {
+                throw new BusinessException("Only short data are supported");
+            }
+
             return new Data(data);
         }
 
