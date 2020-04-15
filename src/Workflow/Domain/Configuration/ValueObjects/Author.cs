@@ -14,17 +14,17 @@ namespace Workflow.Domain.Configuration.ValueObjects
             _author = author;
         }
 
-        public static Author FromString(string author)
+        public static Result<Author> FromString(string author)
         {
             if (author.Length > 3)
             {
-                throw new BusinessException("Author's name is too long");
+                return Result<Author>.Failure("Author's name is too long");
             }
             if (!author.StartsWith("T"))
             {
-                throw new BusinessException("Only authors with names starting with T are allowed");
+                return Result<Author>.Failure("Only authors with names starting with T are allowed");
             }
-            return new Author(author);
+            return Result<Author>.Success(new Author(author));
         } 
 
         public string AsString() => _author;

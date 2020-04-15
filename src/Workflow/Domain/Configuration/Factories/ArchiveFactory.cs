@@ -14,11 +14,11 @@ namespace Workflow.Domain.Configuration.Factories
         internal static Archive Create(Guid id, string data, string author, DateTime creationDateTime)
         {
             var idValue = ConfigurationId.FromGuid(id);
-            var dataValue = Data.FromString(data);
-            var authorValue = Author.FromString(author);
+            var dataResult = Data.FromString(data);
+            var authorResult = Author.FromString(author);
             var creationDate = Date.FromDateTime(creationDateTime);
 
-            return new Archive(idValue, dataValue, authorValue, creationDate);
+            return new Archive(idValue, dataResult.Value, authorResult.Value, creationDate);
         }
     }
 }

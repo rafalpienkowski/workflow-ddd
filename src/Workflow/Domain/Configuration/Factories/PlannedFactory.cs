@@ -15,12 +15,12 @@ namespace Workflow.Domain.Configuration.Factories
         internal static Planned Create(Guid id, string data, string author, DateTime creationDateTime, DateTime whenGoLiveDateTime)
         {
             var idValue = ConfigurationId.FromGuid(id);
-            var dataValue = Data.FromString(data);
-            var authorValue = Author.FromString(author);
+            var dataResult = Data.FromString(data);
+            var authorResult = Author.FromString(author);
             var creationDate = Date.FromDateTime(creationDateTime);
             var whenGoLiveDate = Date.FromDateTime(whenGoLiveDateTime);
 
-            return new Planned(idValue, dataValue, authorValue, creationDate, whenGoLiveDate);
+            return new Planned(idValue, dataResult.Value, authorResult.Value, creationDate, whenGoLiveDate);
         }
     }
 }

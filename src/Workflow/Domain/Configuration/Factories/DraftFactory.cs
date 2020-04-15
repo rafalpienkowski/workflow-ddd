@@ -18,9 +18,10 @@ namespace Workflow.Domain.Configuration.Factories
         public static Draft Create(string data, string author)
         {
             var configurationId = ConfigurationId.New();
-            var draftData = Data.FromString(data);
-            var draftAuthor = Author.FromString(author);
-            return new Draft(configurationId, draftData, draftAuthor);
+            var draftDataResult = Data.FromString(data);
+            var draftAuthorResult = Author.FromString(author);
+
+            return new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value);
         }
 
         /// <summary>
@@ -29,11 +30,11 @@ namespace Workflow.Domain.Configuration.Factories
         internal static Draft Create(Guid id, string data, string author, DateTime creationDate)
         {
             var configurationId = ConfigurationId.FromGuid(id);
-            var draftData = Data.FromString(data);
-            var draftAuthor = Author.FromString(author);
+            var draftDataResult = Data.FromString(data);
+            var draftAuthorResult = Author.FromString(author);
             var draftCreationDate = Date.FromDateTime(creationDate);
 
-            return new Draft(configurationId, draftData, draftAuthor, draftCreationDate);
+            return new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value, draftCreationDate);
         }
     }
 }

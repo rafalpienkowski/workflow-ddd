@@ -1,8 +1,6 @@
 using Workflow.Domain.Configuration.ValueObjects;
 using Xunit;
 using FluentAssertions;
-using System;
-using Workflow.Domain.Framework;
 
 namespace Workflow.Tests.Domain.ValueObjects
 {
@@ -13,9 +11,9 @@ namespace Workflow.Tests.Domain.ValueObjects
         public void Only_Short_Letter_Authors_Allowed()
         {
             var shortName = "Tim";
-            var author = Author.FromString(shortName);
+            var authorResult = Author.FromString(shortName);
 
-            author.Should().NotBeNull();
+            authorResult.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
@@ -23,11 +21,10 @@ namespace Workflow.Tests.Domain.ValueObjects
         {
             var longName = "This is some long name";
 
-            Action act = () => Author.FromString(longName);
+            var authorResult = Author.FromString(longName);
 
-            act.Should()
-                .Throw<BusinessException>()
-                .WithMessage("Author's name is too long");
+            authorResult.IsFailure.Should().BeTrue();
+            authorResult.Message.Should().Be("Author's name is too long");
         }
 
         [Fact]
@@ -35,11 +32,10 @@ namespace Workflow.Tests.Domain.ValueObjects
         {
             var notAllowedName = "Bob";
 
-            Action act = () => Author.FromString(notAllowedName);
+            var authorResult = Author.FromString(notAllowedName);
 
-            act.Should()
-                .Throw<BusinessException>()
-                .WithMessage("Only authors with names starting with T are allowed");
+            authorResult.IsFailure.Should().BeTrue();
+            authorResult.Message.Should().Be("Only authors with names starting with T are allowed");
         }
     }
 }

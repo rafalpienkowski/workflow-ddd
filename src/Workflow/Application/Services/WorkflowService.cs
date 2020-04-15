@@ -27,9 +27,9 @@ namespace Workflow.Application.Services
         {
             var configurationId = ConfigurationId.FromGuid(id);
             var draft = _repository.GetDraft(configurationId);
-            var authorValue = Author.FromString(author);
+            var authorResult = Author.FromString(author);
             var whenGoLiveValue = Date.FromDateTime(whenGoLive);
-            var planned = draft.Schedule(authorValue, whenGoLiveValue);
+            var planned = draft.Schedule(authorResult.Value, whenGoLiveValue);
             
             _repository.Save(planned);
         }
@@ -38,17 +38,17 @@ namespace Workflow.Application.Services
         {
             Live live = null;
             var configurationId = ConfigurationId.FromGuid(id);
-            var authorValue = Author.FromString(author);
+            var authorResult = Author.FromString(author);
             if (_repository.DraftExists(configurationId))
             {
                 var draft = _repository.GetDraft(configurationId);
-                live = draft.GoLive(authorValue);
+                live = draft.GoLive(authorResult.Value);
             }
             
             if (_repository.PlannedExists(configurationId))
             {
                 var planned = _repository.GetPlanned(configurationId);
-                live = planned.GoLive(authorValue);
+                live = planned.GoLive(authorResult.Value);
             }
             else
             {
@@ -60,10 +60,10 @@ namespace Workflow.Application.Services
 
         public void Archive(Guid id, string author)
         {
-            var authorValue = Author.FromString(author);
+            var authorResult = Author.FromString(author);
             var configurationId = ConfigurationId.FromGuid(id);
             var live = _repository.GetLive(configurationId);
-            var archived = live.Archive(authorValue);
+            var archived = live.Archive(authorResult.Value);
 
             _repository.Save(archived);
         }

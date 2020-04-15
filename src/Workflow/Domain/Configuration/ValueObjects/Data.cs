@@ -14,14 +14,14 @@ namespace Workflow.Domain.Configuration.ValueObjects
             _data = data;
         }
 
-        public static Data FromString(string data)
+        public static Result<Data> FromString(string data)
         {
             if (data.Length > 250)
             {
-                throw new BusinessException("Only short data are supported");
+                return Result<Data>.Failure("Only short data are supported");
             }
 
-            return new Data(data);
+            return Result<Data>.Success(new Data(data));
         }
 
         public string AsString() => _data;

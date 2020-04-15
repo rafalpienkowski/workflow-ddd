@@ -2,7 +2,6 @@ using Workflow.Domain.Configuration.ValueObjects;
 using Xunit;
 using FluentAssertions;
 using System;
-using Workflow.Domain.Framework;
 using System.Linq;
 
 namespace Workflow.Tests.Domain.ValueObjects
@@ -15,9 +14,9 @@ namespace Workflow.Tests.Domain.ValueObjects
         {
             var shortData = "Valid data";
 
-            var data = Data.FromString(shortData);
+            var dataResult = Data.FromString(shortData);
 
-            data.Should().NotBeNull();
+            dataResult.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
@@ -26,11 +25,10 @@ namespace Workflow.Tests.Domain.ValueObjects
             var rand = new Random();
             var longData = string.Join("", Enumerable.Repeat(0, 400).Select(n => (char)rand.Next(127)));
 
-            Action act = () => Data.FromString(longData);
+            var dataResult = Data.FromString(longData);
 
-            act.Should()
-                .Throw<BusinessException>()
-                .WithMessage("Only short data are supported");
+            dataResult.IsFailure.Should().BeTrue();
+            dataResult.Message.Should().Be("Only short data are supported");
         }
     }
 }
