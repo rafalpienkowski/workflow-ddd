@@ -8,7 +8,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// <summary>
         /// Id
         /// </summary>
-        internal ArchiveId Id { get; }
+        internal ConfigurationId Id { get; }
         
         /// <summary>
         /// Data
@@ -25,7 +25,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// </summary>
         internal Date CreationDate { get; }
 
-        internal Archive(ArchiveId id,Data data, Author author)
+        internal Archive(ConfigurationId id,Data data, Author author)
         {
             Id = id;
             Data = data;
@@ -33,7 +33,7 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = Date.Now();
         }
 
-        internal Archive(ArchiveId id, Data data, Author author, Date creationDate)
+        internal Archive(ConfigurationId id, Data data, Author author, Date creationDate)
         {
             Id = id;
             Data = data;

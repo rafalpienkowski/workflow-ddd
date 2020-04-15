@@ -6,14 +6,14 @@ namespace Workflow.Domain.Configuration
     public interface IConfigurationRepository
     {
         void Save(Draft draft);
-        Draft GetDraft(DraftId id);
-        bool DraftExists(DraftId id);
+        Draft GetDraft(ConfigurationId id);
+        bool DraftExists(ConfigurationId id);
         void Save(Planned planned);
-        Planned GetPlanned(PlannedId id);
-        bool PlannedExists(PlannedId id);
+        Planned GetPlanned(ConfigurationId id);
+        bool PlannedExists(ConfigurationId id);
         void Save(Live live);
-        Live GetLive(LiveId id);
+        Live GetLive(ConfigurationId id);
         void Save(Archive archived);
-        Archive GetArchived(ArchiveId id);
+        Archive GetArchived(ConfigurationId id);
     }
 }

@@ -8,7 +8,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// <summary>
         /// Id
         /// </summary>
-        internal LiveId Id { get; }
+        internal ConfigurationId Id { get; }
         
         /// <summary>
         /// Data
@@ -25,7 +25,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// </summary>
         internal Date CreationDate { get; }
 
-        internal Live(LiveId id, Data data, Author author)
+        internal Live(ConfigurationId id, Data data, Author author)
         {
             Id = id;
             Data = data;
@@ -33,7 +33,7 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = Date.Now();
         }
 
-        internal Live(LiveId id, Data data, Author author, Date creationDate)
+        internal Live(ConfigurationId id, Data data, Author author, Date creationDate)
         {
             Id = id;
             Data = data;
@@ -43,8 +43,7 @@ namespace Workflow.Domain.Configuration.Entities
 
         public Archive Archive(Author author)
         {
-            var archivedId = ArchiveId.FromLiveId(Id);
-            return new Archive(archivedId, Data, author);
+            return new Archive(Id, Data, author);
         }
     }
 }

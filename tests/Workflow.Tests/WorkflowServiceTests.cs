@@ -1,8 +1,6 @@
 using System;
 using FluentAssertions;
 using Workflow.Application.Services;
-using Workflow.Domain.Configuration;
-using Workflow.Domain.Configuration.Entities;
 using Workflow.Domain.Configuration.ValueObjects;
 using Workflow.Tests.Extensions;
 using Xunit;
@@ -13,11 +11,11 @@ namespace Workflow.Tests
     {
         private readonly ConfigurationInMemoryRepository _repository = new ConfigurationInMemoryRepository();
         private const string someData = "Some data";
-        private const string draftAuthor = "Raf";
+        private const string draftAuthor = "Tim";
         private DateTime goLive = DateTime.UtcNow.AddDays(12);
         private const string plannedAuthor = "Tom";
-        private const string liveAuthor = "Ali";
-        private const string archiveAuthor = "Bob";
+        private const string liveAuthor = "Tam";
+        private const string archiveAuthor = "Tob";
 
         [Fact]
         public void SunnyDayFlowTest()
@@ -26,32 +24,30 @@ namespace Workflow.Tests
             
             // Draft
             var draft = sut.CreateDraft(someData, draftAuthor);
+            var configurationId = draft.Id;
 
             AssertDraft(draft.Id);
 
             // Planned        
             sut.Schedule(draft.Id.AsGuid(), plannedAuthor, goLive);
 
-            var plannedId = PlannedId.FromDraftId(draft.Id);
-            AssertPlanned(plannedId);
+            AssertPlanned(configurationId);
 
             // Live
-            sut.GoLive(plannedId.AsGuid(), liveAuthor);
+            sut.GoLive(configurationId.AsGuid(), liveAuthor);
 
-            var liveId = LiveId.FromPlannedId(plannedId);
-            AssertLive(liveId);
+            AssertLive(configurationId);
 
             // Archive
-            sut.Archive(liveId.AsGuid(), archiveAuthor);
+            sut.Archive(configurationId.AsGuid(), archiveAuthor);
 
-            var archiveId = ArchiveId.FromLiveId(liveId);
-            AssertArchive(archiveId);
+            AssertArchive(configurationId);
 
             // End flow assertion
-            AssertRawData(archiveId);
+            AssertRawData(configurationId);
         }
 
-        private void AssertDraft(DraftId draftId)
+        private void AssertDraft(ConfigurationId draftId)
         {
             var draftFromRepository = _repository.GetDraft(draftId);
             draftFromRepository.Data.AsString().Should().Be(someData);
@@ -59,7 +55,7 @@ namespace Workflow.Tests
             draftFromRepository.CreationDate.ShouldBe(DateTime.UtcNow);
         }
 
-        private void AssertPlanned(PlannedId plannedId)
+        private void AssertPlanned(ConfigurationId plannedId)
         {
             var planned = _repository.GetPlanned(plannedId);
             planned.Data.AsString().Should().Be(someData);
@@ -68,7 +64,7 @@ namespace Workflow.Tests
             planned.WhenGoLive.ShouldBe(goLive);
         }
 
-        private void AssertLive(LiveId liveId)
+        private void AssertLive(ConfigurationId liveId)
         {
             var live = _repository.GetLive(liveId);
             live.Data.AsString().Should().Be(someData);
@@ -76,7 +72,7 @@ namespace Workflow.Tests
             live.CreationDate.ShouldBe(DateTime.UtcNow);
         }
 
-        private void AssertArchive(ArchiveId archiveId)
+        private void AssertArchive(ConfigurationId archiveId)
         {
             var archived = _repository.GetArchived(archiveId);
             archived.Data.AsString().Should().Be(someData);
@@ -84,7 +80,7 @@ namespace Workflow.Tests
             archived.CreationDate.ShouldBe(DateTime.UtcNow);
         }
 
-        private void AssertRawData(ArchiveId archiveId)
+        private void AssertRawData(ConfigurationId archiveId)
         {
             var goLiveDate = Date.FromDateTime(goLive);
             var dataRow = _repository.Get(archiveId.AsGuid());

@@ -4,18 +4,18 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Workflow.Tests")]
 namespace Workflow.Domain.Configuration.ValueObjects
 {
-    public class ArchiveId
+    public class ConfigurationId
     {
         private readonly Guid _id;
 
-        private ArchiveId(Guid id)
+        private ConfigurationId(Guid id)
         {
             _id = id;
         }
 
-        internal static ArchiveId FromGuid(Guid id) => new ArchiveId(id);
+        internal static ConfigurationId FromGuid(Guid id) => new ConfigurationId(id);
 
-        public static ArchiveId FromLiveId(LiveId liveId) => new ArchiveId(liveId.AsGuid());
+        public static ConfigurationId New() => FromGuid(Guid.NewGuid());
 
         public Guid AsGuid() => _id;
     }

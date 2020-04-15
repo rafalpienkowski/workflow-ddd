@@ -1,4 +1,3 @@
-using System;
 using Workflow.Domain.Configuration.ValueObjects;
 
 namespace Workflow.Domain.Configuration.Entities
@@ -9,7 +8,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// <summary>
         /// Id
         /// </summary>
-        internal PlannedId Id { get; }
+        internal ConfigurationId Id { get; }
         
         /// <summary>
         /// Data
@@ -30,7 +29,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// </summary>
         internal Date WhenGoLive { get; }
 
-        internal Planned(PlannedId id, Data data, Author author, Date goLive)
+        internal Planned(ConfigurationId id, Data data, Author author, Date goLive)
         {
             Id = id;
             Data = data;
@@ -39,7 +38,7 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = Date.Now();
         }
 
-        internal Planned(PlannedId id, Data data, Author author, Date creationDate, Date whenGoLive)
+        internal Planned(ConfigurationId id, Data data, Author author, Date creationDate, Date whenGoLive)
         {
             Id = id;
             Data = data;
@@ -50,8 +49,7 @@ namespace Workflow.Domain.Configuration.Entities
 
         internal Live GoLive(Author author)
         {
-            var liveId = LiveId.FromPlannedId(Id);
-            return new Live(liveId, Data, author);
+            return new Live(Id, Data, author);
         }
     }
 }

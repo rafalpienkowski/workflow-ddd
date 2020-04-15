@@ -25,8 +25,8 @@ namespace Workflow.Application.Services
 
         public void Schedule(Guid id, string author, DateTime whenGoLive)
         {
-            var draftId = DraftId.FromGuid(id);
-            var draft = _repository.GetDraft(draftId);
+            var configurationId = ConfigurationId.FromGuid(id);
+            var draft = _repository.GetDraft(configurationId);
             var authorValue = Author.FromString(author);
             var whenGoLiveValue = Date.FromDateTime(whenGoLive);
             var planned = draft.Schedule(authorValue, whenGoLiveValue);
@@ -37,18 +37,17 @@ namespace Workflow.Application.Services
         public void GoLive(Guid id, string author)
         {
             Live live = null;
-            var draftId = DraftId.FromGuid(id);
+            var configurationId = ConfigurationId.FromGuid(id);
             var authorValue = Author.FromString(author);
-            if (_repository.DraftExists(draftId))
+            if (_repository.DraftExists(configurationId))
             {
-                var draft = _repository.GetDraft(draftId);
+                var draft = _repository.GetDraft(configurationId);
                 live = draft.GoLive(authorValue);
             }
             
-            var plannedId = PlannedId.FromDraftId(draftId);
-            if (_repository.PlannedExists(plannedId))
+            if (_repository.PlannedExists(configurationId))
             {
-                var planned = _repository.GetPlanned(plannedId);
+                var planned = _repository.GetPlanned(configurationId);
                 live = planned.GoLive(authorValue);
             }
             else
@@ -62,8 +61,8 @@ namespace Workflow.Application.Services
         public void Archive(Guid id, string author)
         {
             var authorValue = Author.FromString(author);
-            var liveId = LiveId.FromGuid(id);
-            var live = _repository.GetLive(liveId);
+            var configurationId = ConfigurationId.FromGuid(id);
+            var live = _repository.GetLive(configurationId);
             var archived = live.Archive(authorValue);
 
             _repository.Save(archived);

@@ -10,7 +10,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// <summary>
         /// Id
         /// </summary>
-        internal DraftId Id { get; }
+        internal ConfigurationId Id { get; }
         
         /// <summary>
         /// Data
@@ -27,7 +27,7 @@ namespace Workflow.Domain.Configuration.Entities
         /// </summary>
         internal Date CreationDate { get; }
 
-        internal Draft(DraftId id, Data data, Author author)
+        internal Draft(ConfigurationId id, Data data, Author author)
         {
             Id = id;
             Data = data;
@@ -35,7 +35,7 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = Date.FromDateTime(DateTime.UtcNow);
         }
 
-        internal Draft(DraftId id, Data data, Author author, Date creationDate)
+        internal Draft(ConfigurationId id, Data data, Author author, Date creationDate)
         {
             Id = id;
             Data = data;
@@ -46,14 +46,12 @@ namespace Workflow.Domain.Configuration.Entities
         public Planned Schedule(Author author, Date whenGoLive)
         {
             //When go live validation
-            var plannedId = PlannedId.FromDraftId(Id);
-            return new Planned(plannedId, Data, author, whenGoLive);
+            return new Planned(Id, Data, author, whenGoLive);
         }
 
         public Live GoLive(Author author)
         {
-            var liveId = LiveId.FromDraftId(Id);
-            return new Live(liveId, Data, author);
+            return new Live(Id, Data, author);
         }
     }
 }

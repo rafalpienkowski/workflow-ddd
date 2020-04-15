@@ -13,7 +13,7 @@ namespace Workflow.Domain.Configuration.Factories
     {
         internal static Archive Create(Guid id, string data, string author, DateTime creationDateTime)
         {
-            var idValue = ArchiveId.FromGuid(id);
+            var idValue = ConfigurationId.FromGuid(id);
             var dataValue = Data.FromString(data);
             var authorValue = Author.FromString(author);
             var creationDate = Date.FromDateTime(creationDateTime);

@@ -25,7 +25,7 @@ namespace Workflow.Tests
             _data.Add(dataRow);
         }
 
-        public Draft GetDraft(DraftId id)
+        public Draft GetDraft(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Draft);
             if(dataRow == null)
@@ -46,7 +46,7 @@ namespace Workflow.Tests
             dataRow.WhenGoLive = planned.WhenGoLive.AsDateTime();
         }
 
-        public Planned GetPlanned(PlannedId id)
+        public Planned GetPlanned(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Planned);
             if(dataRow == null)
@@ -66,7 +66,7 @@ namespace Workflow.Tests
             dataRow.LiveCreation = live.CreationDate.AsDateTime();
         }
 
-        public Live GetLive(LiveId id)
+        public Live GetLive(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Live);
             if (dataRow == null)
@@ -86,7 +86,7 @@ namespace Workflow.Tests
             dataRow.ArchiveCreation = archived.CreationDate.AsDateTime();
         }
 
-        public Archive GetArchived(ArchiveId id)
+        public Archive GetArchived(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Archived);
             if (dataRow == null)
@@ -96,12 +96,12 @@ namespace Workflow.Tests
             return ArchiveFactory.Create(dataRow.Id, dataRow.Data, dataRow.ArchivedAuthor, dataRow.ArchiveCreation);
         }
 
-        public bool DraftExists(DraftId id)
+        public bool DraftExists(ConfigurationId id)
         {
             return _data.Any(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Draft);
         }
 
-        public bool PlannedExists(PlannedId id)
+        public bool PlannedExists(ConfigurationId id)
         {
             return _data.Any(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Planned);
         }
