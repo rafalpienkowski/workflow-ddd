@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Workflow.Domain.Configuration.Entities;
 using Workflow.Domain.Configuration.ValueObjects;
+using Workflow.Domain.Framework;
 
 [assembly: InternalsVisibleTo("Workflow.Tests")]
 namespace Workflow.Domain.Configuration.Factories
@@ -18,6 +19,7 @@ namespace Workflow.Domain.Configuration.Factories
         public static Draft Create(string data, string author)
         {
             var configurationId = ConfigurationId.New();
+
             var draftDataResult = Data.FromString(data);
             var draftAuthorResult = Author.FromString(author);
 
@@ -30,9 +32,13 @@ namespace Workflow.Domain.Configuration.Factories
         internal static Draft Create(Guid id, string data, string author, DateTime creationDate)
         {
             var configurationId = ConfigurationId.FromGuid(id);
+            var draftCreationDate = Date.FromDateTime(creationDate);
+
             var draftDataResult = Data.FromString(data);
             var draftAuthorResult = Author.FromString(author);
-            var draftCreationDate = Date.FromDateTime(creationDate);
+
+            Result.Combine(draftDataResult, draftAuthorResult)
+                .OnFailure((r) => throw new ArgumentOutOfRangeException(r.Message));
 
             return new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value, draftCreationDate);
         }

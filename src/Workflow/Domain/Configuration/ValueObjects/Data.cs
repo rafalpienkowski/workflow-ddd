@@ -18,10 +18,10 @@ namespace Workflow.Domain.Configuration.ValueObjects
         {
             if (data.Length > 250)
             {
-                return Result<Data>.Failure("Only short data are supported");
+                return Result.Failure<Data>("Only short data are supported");
             }
 
-            return Result<Data>.Success(new Data(data));
+            return Result.Success<Data>(new Data(data));
         }
 
         public string AsString() => _data;

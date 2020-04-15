@@ -18,13 +18,13 @@ namespace Workflow.Domain.Configuration.ValueObjects
         {
             if (author.Length > 3)
             {
-                return Result<Author>.Failure("Author's name is too long");
+                return Result.Failure<Author>("Author's name is too long");
             }
             if (!author.StartsWith("T"))
             {
-                return Result<Author>.Failure("Only authors with names starting with T are allowed");
+                return Result.Failure<Author>("Only authors with names starting with T are allowed");
             }
-            return Result<Author>.Success(new Author(author));
+            return Result.Success<Author>(new Author(author));
         } 
 
         public string AsString() => _author;
