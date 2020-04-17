@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using Workflow.Domain.Configuration.ValueObjects;
+using Workflow.Domain.Framework;
 
 [assembly: InternalsVisibleTo("Workflow.Tests")]
 namespace Workflow.Domain.Configuration.Entities
@@ -43,10 +44,10 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = creationDate;
         }
 
-        public Planned Schedule(Author author, Date whenGoLive)
+        public Result<Planned> Schedule(Author author, Date whenGoLive)
         {
             //When go live validation
-            return new Planned(Id, Data, author, whenGoLive);
+            return Result.Success<Planned>(new Planned(Id, Data, author, whenGoLive));
         }
 
         public Live GoLive(Author author)

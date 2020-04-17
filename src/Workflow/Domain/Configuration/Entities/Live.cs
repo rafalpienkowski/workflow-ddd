@@ -1,4 +1,5 @@
 using Workflow.Domain.Configuration.ValueObjects;
+using Workflow.Domain.Framework;
 
 namespace Workflow.Domain.Configuration.Entities
 {
@@ -41,9 +42,9 @@ namespace Workflow.Domain.Configuration.Entities
             CreationDate = creationDate;
         }
 
-        public Archive Archive(Author author)
+        public Result<Archive> Archive(Author author)
         {
-            return new Archive(Id, Data, author);
+            return Result.Success<Archive>(new Archive(Id, Data, author));
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using FluentAssertions;
 using Workflow.Application.Services;
 using Workflow.Domain.Configuration.ValueObjects;
+using Workflow.Domain.Framework;
 using Workflow.Tests.Extensions;
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace Workflow.Tests
             var sut = new WorkflowService(_repository);
             
             // Draft
-            var draft = sut.CreateDraft(someData, draftAuthor);
+            var draft = sut.CreateDraft(someData, draftAuthor).Value;
             var configurationId = draft.Id;
 
             AssertDraft(draft.Id);
@@ -50,34 +51,40 @@ namespace Workflow.Tests
         private void AssertDraft(ConfigurationId draftId)
         {
             var draftFromRepository = _repository.GetDraft(draftId);
-            draftFromRepository.Data.AsString().Should().Be(someData);
-            draftFromRepository.Author.AsString().Should().Be(draftAuthor);
-            draftFromRepository.CreationDate.ShouldBe(DateTime.UtcNow);
+            draftFromRepository.HasValue.Should().BeTrue();
+            draftFromRepository.Value.Data.AsString().Should().Be(someData);
+            draftFromRepository.Value.Author.AsString().Should().Be(draftAuthor);
+            draftFromRepository.Value.CreationDate.ShouldBe(DateTime.UtcNow);
         }
 
         private void AssertPlanned(ConfigurationId plannedId)
         {
             var planned = _repository.GetPlanned(plannedId);
-            planned.Data.AsString().Should().Be(someData);
-            planned.Author.AsString().Should().Be(plannedAuthor);
-            planned.CreationDate.ShouldBe(DateTime.UtcNow);
-            planned.WhenGoLive.ShouldBe(goLive);
+
+            planned.HasValue.Should().BeTrue();
+            planned.Value.Data.AsString().Should().Be(someData);
+            planned.Value.Author.AsString().Should().Be(plannedAuthor);
+            planned.Value.CreationDate.ShouldBe(DateTime.UtcNow);
+            planned.Value.WhenGoLive.ShouldBe(goLive);
         }
 
         private void AssertLive(ConfigurationId liveId)
         {
             var live = _repository.GetLive(liveId);
-            live.Data.AsString().Should().Be(someData);
-            live.Author.AsString().Should().Be(liveAuthor);
-            live.CreationDate.ShouldBe(DateTime.UtcNow);
+
+            live.HasValue.Should().BeTrue();
+            live.Value.Data.AsString().Should().Be(someData);
+            live.Value.Author.AsString().Should().Be(liveAuthor);
+            live.Value.CreationDate.ShouldBe(DateTime.UtcNow);
         }
 
         private void AssertArchive(ConfigurationId archiveId)
         {
             var archived = _repository.GetArchived(archiveId);
-            archived.Data.AsString().Should().Be(someData);
-            archived.Author.AsString().Should().Be(archiveAuthor);
-            archived.CreationDate.ShouldBe(DateTime.UtcNow);
+            archived.HasValue.Should().BeTrue();
+            archived.Value.Data.AsString().Should().Be(someData);
+            archived.Value.Author.AsString().Should().Be(archiveAuthor);
+            archived.Value.CreationDate.ShouldBe(DateTime.UtcNow);
         }
 
         private void AssertRawData(ConfigurationId archiveId)

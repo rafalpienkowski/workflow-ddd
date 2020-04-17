@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Workflow.Domain.Framework
@@ -25,7 +24,7 @@ namespace Workflow.Domain.Framework
         {
             if(results.Any(r => r.IsFailure))
             {
-                return Failure(results.First(r => r.IsFailure).Message);
+                return Failure(string.Join(';', results.Select(r => r.Message)));
             }
 
             return Success();

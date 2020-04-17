@@ -12,7 +12,7 @@ namespace Workflow.Domain.Configuration.Factories
     /// </summary>
     internal class ArchiveFactory
     {
-        internal static Archive Create(Guid id, string data, string author, DateTime creationDateTime)
+        internal static Result<Archive> Create(Guid id, string data, string author, DateTime creationDateTime)
         {
             var idValue = ConfigurationId.FromGuid(id);
             var creationDate = Date.FromDateTime(creationDateTime);
@@ -23,7 +23,7 @@ namespace Workflow.Domain.Configuration.Factories
             Result.Combine(dataResult, authorResult)
                 .OnFailure((r) => throw new ArgumentOutOfRangeException(r.Message));
 
-            return new Archive(idValue, dataResult.Value, authorResult.Value, creationDate);
+            return Result.Success<Archive>(new Archive(idValue, dataResult.Value, authorResult.Value, creationDate));
         }
     }
 }

@@ -16,20 +16,26 @@ namespace Workflow.Domain.Configuration.Factories
         /// <summary>
         /// This is the right way our system should creates draft instances.
         /// </summary>
-        public static Draft Create(string data, string author)
+        public static Result<Draft> Create(string data, string author)
         {
             var configurationId = ConfigurationId.New();
 
             var draftDataResult = Data.FromString(data);
             var draftAuthorResult = Author.FromString(author);
 
-            return new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value);
+            var combinedResult = Result.Combine(draftDataResult, draftAuthorResult);
+            if (combinedResult.IsFailure)
+            {
+                return Result.Failure<Draft>(combinedResult.Message);
+            }
+
+            return Result.Success<Draft>(new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value));
         }
 
         /// <summary>
         /// Creates a draft objects based on values stored in the DB.
         /// </summary>
-        internal static Draft Create(Guid id, string data, string author, DateTime creationDate)
+        internal static Result<Draft> Create(Guid id, string data, string author, DateTime creationDate)
         {
             var configurationId = ConfigurationId.FromGuid(id);
             var draftCreationDate = Date.FromDateTime(creationDate);
@@ -40,7 +46,7 @@ namespace Workflow.Domain.Configuration.Factories
             Result.Combine(draftDataResult, draftAuthorResult)
                 .OnFailure((r) => throw new ArgumentOutOfRangeException(r.Message));
 
-            return new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value, draftCreationDate);
+            return Result.Success<Draft>(new Draft(configurationId, draftDataResult.Value, draftAuthorResult.Value, draftCreationDate));
         }
     }
 }

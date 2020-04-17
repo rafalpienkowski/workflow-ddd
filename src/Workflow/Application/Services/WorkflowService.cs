@@ -3,6 +3,7 @@ using Workflow.Domain.Configuration;
 using Workflow.Domain.Configuration.Entities;
 using Workflow.Domain.Configuration.Factories;
 using Workflow.Domain.Configuration.ValueObjects;
+using Workflow.Domain.Framework;
 
 namespace Workflow.Application.Services
 {
@@ -15,57 +16,68 @@ namespace Workflow.Application.Services
             _repository = repository;
         }
 
-        public Draft CreateDraft(string data, string author)
+        public Result<Draft> CreateDraft(string data, string author)
         {
-            var draft = DraftFactory.Create(data, author);
-            _repository.Save(draft);
-
-            return draft;
+            return DraftFactory.Create(data, author)
+                .OnSuccess(result =>_repository.Save(result.Value))
+                .OnBoth(result => result);
         }
 
-        public void Schedule(Guid id, string author, DateTime whenGoLive)
+        public Result Schedule(Guid id, string author, DateTime whenGoLive)
         {
-            var configurationId = ConfigurationId.FromGuid(id);
-            var draft = _repository.GetDraft(configurationId);
             var authorResult = Author.FromString(author);
+            var configurationId = ConfigurationId.FromGuid(id);
             var whenGoLiveValue = Date.FromDateTime(whenGoLive);
-            var planned = draft.Schedule(authorResult.Value, whenGoLiveValue);
-            
-            _repository.Save(planned);
+
+            var draft = _repository.GetDraft(configurationId);
+
+            return Result.Combine(authorResult, (Result<Draft>)draft)
+                .OnSuccess(() => draft.Value.Schedule(authorResult.Value, whenGoLiveValue)
+                                        .OnSuccess(result => _repository.Save(result.Value))
+                            );
         }
 
-        public void GoLive(Guid id, string author)
+        public Result GoLive(Guid id, string author)
         {
             Live live = null;
             var configurationId = ConfigurationId.FromGuid(id);
             var authorResult = Author.FromString(author);
-            if (_repository.DraftExists(configurationId))
+
+            if (authorResult.IsFailure)
             {
-                var draft = _repository.GetDraft(configurationId);
-                live = draft.GoLive(authorResult.Value);
+                return Result.Failure(authorResult.Message);
+            }
+
+            if (_repository.DraftExists(configurationId).IsSuccess)
+            {
+                var draftResult = _repository.GetDraft(configurationId);
+                live = draftResult.Value.GoLive(authorResult.Value);
             }
             
-            if (_repository.PlannedExists(configurationId))
+            if (_repository.PlannedExists(configurationId).IsSuccess)
             {
-                var planned = _repository.GetPlanned(configurationId);
-                live = planned.GoLive(authorResult.Value);
+                var plannedResult = _repository.GetPlanned(configurationId);
+                live = plannedResult.Value.GoLive(authorResult.Value);
             }
             else
             {
-                throw new NotSupportedException($"There is no draft or planned configuration with id: {id}");
+                return Result.Failure("There is no draft or planned configuration with id: {id}");
             }
 
-            _repository.Save(live);
+            return _repository.Save(live);
         }
 
-        public void Archive(Guid id, string author)
+        public Result Archive(Guid id, string author)
         {
-            var authorResult = Author.FromString(author);
             var configurationId = ConfigurationId.FromGuid(id);
-            var live = _repository.GetLive(configurationId);
-            var archived = live.Archive(authorResult.Value);
-
-            _repository.Save(archived);
+            var authorResult = Author.FromString(author);
+            var liveResult = _repository.GetLive(configurationId);
+            
+            return Result.Combine(authorResult, (Result<Live>)liveResult)
+                .OnSuccess(() => 
+                    liveResult.Value.Archive(authorResult.Value)
+                        .OnSuccess(result => _repository.Save(result.Value))
+                );
         }
     }
 }

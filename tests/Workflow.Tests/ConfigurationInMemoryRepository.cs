@@ -5,6 +5,7 @@ using Workflow.Domain.Configuration;
 using Workflow.Domain.Configuration.Entities;
 using Workflow.Domain.Configuration.Factories;
 using Workflow.Domain.Configuration.ValueObjects;
+using Workflow.Domain.Framework;
 
 namespace Workflow.Tests
 {
@@ -12,7 +13,7 @@ namespace Workflow.Tests
     {
         private readonly List<SampleDataTable> _data = new List<SampleDataTable>();
 
-        public void Save(Draft draft)
+        public Result Save(Draft draft)
         {
             var dataRow = new SampleDataTable
             {
@@ -23,20 +24,22 @@ namespace Workflow.Tests
                 DraftAuthor = draft.Author.AsString()
             };
             _data.Add(dataRow);
+
+            return Result.Success();
         }
 
-        public Draft GetDraft(ConfigurationId id)
+        public Maybe<Draft> GetDraft(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Draft);
             if(dataRow == null)
             {
-                return null;
+                return Maybe<Draft>.None;
             }
 
             return DraftFactory.Create(dataRow.Id, dataRow.Data, dataRow.DraftAuthor, dataRow.DraftCreation);
         }
 
-        public void Save(Planned planned)
+        public Result Save(Planned planned)
         {
             var dataRow = _data.Single(d => d.Id == planned.Id.AsGuid());
 
@@ -44,66 +47,76 @@ namespace Workflow.Tests
             dataRow.PlannedAuthor = planned.Author.AsString();
             dataRow.PlannedCreation = planned.CreationDate.AsDateTime();
             dataRow.WhenGoLive = planned.WhenGoLive.AsDateTime();
+
+            return Result.Success();
         }
 
-        public Planned GetPlanned(ConfigurationId id)
+        public Maybe<Planned> GetPlanned(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Planned);
             if(dataRow == null)
             {
-                return null;
+                return Maybe<Planned>.None;
             }
 
             return PlannedFactory.Create(dataRow.Id, dataRow.Data, dataRow.PlannedAuthor, dataRow.PlannedCreation, dataRow.WhenGoLive);
         }
 
-        public void Save(Live live)
+        public Result Save(Live live)
         {
             var dataRow = _data.Single(d => d.Id == live.Id.AsGuid());
 
             dataRow.Status = ConfigStatus.Live;
             dataRow.LiveAuthor = live.Author.AsString();
             dataRow.LiveCreation = live.CreationDate.AsDateTime();
+
+            return Result.Success();
         }
 
-        public Live GetLive(ConfigurationId id)
+        public Maybe<Live> GetLive(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Live);
             if (dataRow == null)
             {
-                return null;
+                return Maybe<Live>.None;
             }
 
             return LiveFactory.Create(dataRow.Id, dataRow.Data, dataRow.LiveAuthor, dataRow.LiveCreation);
         }
 
-        public void Save(Archive archived)
+        public Result Save(Archive archived)
         {
             var dataRow = _data.Single(d => d.Id == archived.Id.AsGuid());
 
             dataRow.Status = ConfigStatus.Archived;
             dataRow.ArchivedAuthor = archived.Author.AsString();
             dataRow.ArchiveCreation = archived.CreationDate.AsDateTime();
+
+            return Result.Success();
         }
 
-        public Archive GetArchived(ConfigurationId id)
+        public Maybe<Archive> GetArchived(ConfigurationId id)
         {
             var dataRow = _data.FirstOrDefault(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Archived);
             if (dataRow == null)
             {
-                return null;
+                return Maybe<Archive>.None;
             }
             return ArchiveFactory.Create(dataRow.Id, dataRow.Data, dataRow.ArchivedAuthor, dataRow.ArchiveCreation);
         }
 
-        public bool DraftExists(ConfigurationId id)
+        public Result DraftExists(ConfigurationId id)
         {
-            return _data.Any(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Draft);
+            return _data.Any(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Draft) 
+                    ? Result.Success() 
+                    : Result.Failure($"There is no draft with id: {id}");
         }
 
-        public bool PlannedExists(ConfigurationId id)
+        public Result PlannedExists(ConfigurationId id)
         {
-            return _data.Any(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Planned);
+            return _data.Any(d => d.Id == id.AsGuid() && d.Status == ConfigStatus.Planned)
+                    ? Result.Success()
+                    : Result.Failure($"There is no planned with id {id}");
         }
 
         internal SampleDataTable Get(Guid id)

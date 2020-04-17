@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Workflow.Domain.Framework
 {
@@ -29,6 +30,16 @@ namespace Workflow.Domain.Framework
             }
 
             return Result.Failure(result.Message);
+        }
+
+        public static implicit operator Maybe<T>(Result<T> result)
+        {
+            if (result.IsFailure)
+            {
+                return Maybe<T>.None;
+            }
+
+            return Maybe<T>.From(result.Value);
         }
     }
 }

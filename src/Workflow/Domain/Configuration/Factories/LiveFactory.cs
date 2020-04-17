@@ -12,7 +12,7 @@ namespace Workflow.Domain.Configuration.Factories
     /// </summary>
     internal class LiveFactory
     {
-        internal static Live Create(Guid id, string data, string author, DateTime creationDateTime)
+        internal static Result<Live> Create(Guid id, string data, string author, DateTime creationDateTime)
         {
             var idValue = ConfigurationId.FromGuid(id);
             var creationDate = Date.FromDateTime(creationDateTime);
@@ -23,7 +23,7 @@ namespace Workflow.Domain.Configuration.Factories
             Result.Combine(dataResult, authorResult)
                 .OnFailure((r) => throw new ArgumentOutOfRangeException(r.Message));
 
-            return new Live(idValue, dataResult.Value, authorResult.Value, creationDate);
+            return Result.Success<Live>(new Live(idValue, dataResult.Value, authorResult.Value, creationDate));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Workflow.Domain.Configuration.Factories
     /// </summary>
     internal class PlannedFactory
     {
-        internal static Planned Create(Guid id, string data, string author, DateTime creationDateTime, DateTime whenGoLiveDateTime)
+        internal static Result<Planned> Create(Guid id, string data, string author, DateTime creationDateTime, DateTime whenGoLiveDateTime)
         {
             var idValue = ConfigurationId.FromGuid(id);
             var creationDate = Date.FromDateTime(creationDateTime);
@@ -25,7 +25,7 @@ namespace Workflow.Domain.Configuration.Factories
             Result.Combine(dataResult, authorResult)
                 .OnFailure((r) => throw new ArgumentOutOfRangeException(r.Message));
 
-            return new Planned(idValue, dataResult.Value, authorResult.Value, creationDate, whenGoLiveDate);
+            return Result.Success(new Planned(idValue, dataResult.Value, authorResult.Value, creationDate, whenGoLiveDate));
         }
     }
 }
