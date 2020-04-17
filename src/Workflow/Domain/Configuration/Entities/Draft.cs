@@ -46,7 +46,11 @@ namespace Workflow.Domain.Configuration.Entities
 
         public Result<Planned> Schedule(Author author, Date whenGoLive)
         {
-            //When go live validation
+            var nowDate = Date.Now();
+            if (whenGoLive < nowDate)
+            {
+                return Result.Failure<Planned>("We are not able to schedule configuration in the past");
+            }
             return Result.Success<Planned>(new Planned(Id, Data, author, whenGoLive));
         }
 

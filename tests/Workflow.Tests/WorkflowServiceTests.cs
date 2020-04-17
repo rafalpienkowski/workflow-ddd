@@ -29,7 +29,7 @@ namespace Workflow.Tests
 
             AssertDraft(draft.Id);
 
-            // Planned        
+            // Planned
             sut.Schedule(draft.Id.AsGuid(), plannedAuthor, goLive);
 
             AssertPlanned(configurationId);
